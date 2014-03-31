@@ -1,25 +1,31 @@
-package lab2.part1;
+package lab2.part3;
 
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import lab2.common.LinkFetcher;
 
-public class Part1Main {
+public class Part3Main {
 	private static ArrayList<URL> linkList;
 	private static int index;
-	public static void main(String[] args) {
+	
+	public static void main(String[] args){
 		LinkFetcher lf = new LinkFetcher("http://www.eit.lth.se/index.php?ciuid=729&coursepage=4452","http://www.eit.lth.se/");
 		linkList = lf.giefMeLinks();
-		
+
 		File folder = new File("pdf");
 		if(!folder.exists()) folder.mkdir();
 		
-		for(int i= 0;i<linkList.size();i++){
-			URL url = linkList.get(i);
-			RunnerThread r = new RunnerThread(url, "PDF-"+i+".pdf");
-			r.start();
+		ExecutorService pool = Executors.newFixedThreadPool(10);
+		
+		for(int i = 0; i<10;i++){
+			Runnable task = new RunnerCallable();
+			pool.submit(task);
 		}
+		pool.shutdown();
 	}
 	
 	public static synchronized URL nextLink(){
@@ -31,5 +37,4 @@ public class Part1Main {
 	public static String getFilename(URL url){
 		return "PDF-"+linkList.indexOf(url)+".pdf";
 	}
-
 }

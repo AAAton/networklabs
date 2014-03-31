@@ -5,7 +5,6 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import lab2.common.LinkFetcher;
-import lab2.common.RunnerSync;
 
 public class Part2Main {
 	private static ArrayList<URL> linkList;
@@ -13,14 +12,17 @@ public class Part2Main {
 	public static void main(String[] args) {
 		LinkFetcher lf = new LinkFetcher("http://www.eit.lth.se/index.php?ciuid=729&coursepage=4452","http://www.eit.lth.se/");
 		linkList = lf.giefMeLinks();
-		
+
 		File folder = new File("pdf");
 		if(!folder.exists()) folder.mkdir();
 		
-		RunnerSync r = new RunnerSync();
-		r.run();
+		for(int i = 0; i<10;i++){
+			RunnerSync r = new RunnerSync();
+			Thread t = new Thread(r);
+			t.start();
+		}
 	}
-	
+
 	public static synchronized URL nextLink(){
 		index++;
 		if(index<linkList.size())
