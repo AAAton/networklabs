@@ -19,10 +19,10 @@ public class Part3Main {
 		File folder = new File("pdf");
 		if(!folder.exists()) folder.mkdir();
 		
-		ExecutorService pool = Executors.newFixedThreadPool(10);
+		ExecutorService pool = Executors.newFixedThreadPool(5);
 		
-		for(int i = 0; i<10;i++){
-			Runnable task = new RunnerCallable();
+		for(URL url : linkList){
+			Runnable task = new RunnerCallable(url);
 			pool.submit(task);
 		}
 		pool.shutdown();

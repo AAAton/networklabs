@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import lab2.common.LinkFetcher;
+import lab2.part2.RunnerSync;
 
 public class Part1Main {
 	private static ArrayList<URL> linkList;
@@ -15,10 +16,10 @@ public class Part1Main {
 		File folder = new File("pdf");
 		if(!folder.exists()) folder.mkdir();
 		
-		for(int i= 0;i<linkList.size();i++){
-			URL url = linkList.get(i);
-			RunnerThread r = new RunnerThread(url, "PDF-"+i+".pdf");
-			r.start();
+			for(int i = 0; i<5;i++){
+				Thread t = new RunnerThread();
+				t.start();
+			
 		}
 	}
 	
