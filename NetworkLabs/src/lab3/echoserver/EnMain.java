@@ -1,4 +1,4 @@
-package EchoServer;
+package lab3.echoserver;
 
 
 public class EnMain {
@@ -8,7 +8,7 @@ public class EnMain {
 	 */
 	public static void main(String[] args) {
 
-		EchoTCP1 server = new EchoTCP1();
+		EchoTCP2 server = new EchoTCP2();
 
 	}
 

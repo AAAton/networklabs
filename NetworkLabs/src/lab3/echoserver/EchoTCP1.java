@@ -1,4 +1,4 @@
-package EchoServer;
+package lab3.echoserver;
 
 import java.io.IOException;
 import java.io.InputStream;
