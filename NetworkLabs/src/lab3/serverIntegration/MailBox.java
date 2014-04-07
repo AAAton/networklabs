@@ -1,19 +1,33 @@
 package lab3.serverIntegration;
 
 import java.util.ArrayList;
-import java.util.Observable;
 
-public class MailBox extends Observable{
-	private ArrayList<Message> messageList;
+public class MailBox {
+//	private ArrayList<Message> messageList;
 	private Message message;
+	private ArrayList<ClientHandler> clientHandlers;
 	
-	public synchronized void addMessage(Message msg){
-		messageList.add(msg);
-		this.notifyObservers();	
+	
+	public MailBox(){
+//		messageList = new ArrayList<Message>();
+		clientHandlers = new ArrayList<ClientHandler>();
 	}
 	
-	@SuppressWarnings("unchecked")
-	public synchronized ArrayList<Message> getMessages(){		
-		return (ArrayList<Message>) messageList.clone();
+	public synchronized void addMessage(Message msg) throws InterruptedException{
+		while(message!=null) wait();
+		message = msg;
+		for(ClientHandler c:clientHandlers){
+			c.listenToMe(msg);
+		}
+		message = null;
+		notifyAll();
+	}
+	
+	
+	public void addClientHandler(ClientHandler ch){
+		clientHandlers.add(ch);
+	}
+	public void removeClientHandler(ClientHandler ch){
+		clientHandlers.remove(ch);
 	}
 }

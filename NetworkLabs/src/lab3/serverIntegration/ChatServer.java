@@ -9,6 +9,7 @@ public class ChatServer {
 		try {
 			@SuppressWarnings("resource")
 			ServerSocket serverSocket = new ServerSocket(30000);
+			System.out.println("Created ChatServer");
 			while (true) {
 				Socket socket = serverSocket.accept();
 
@@ -16,7 +17,7 @@ public class ChatServer {
 				cH.start();
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 	}
 }

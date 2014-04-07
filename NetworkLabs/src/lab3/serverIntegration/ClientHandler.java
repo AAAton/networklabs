@@ -5,37 +5,43 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
 
-public class ClientHandler extends Thread implements Observer{
-	private Socket socket;
+
+/*
+ * This class is made with MVC - pattern. Super sexy but probs not correct according to the assignment
+ */
+public class ClientHandler extends Thread{
+//	private Socket socket;
 	private OutputStream outputStream;
 	private InputStream inputStream;
-	private ArrayList<Message> unreadMessages,readMessages;
+	private ArrayList<Message> readMessages;
 
 	public ClientHandler(Socket socket) throws IOException{
-		this.socket=socket;
-		ServerIntegration.mailBox.addObserver(this);
+//		this.socket=socket;
+		
+		ServerIntegration.mailBox.addClientHandler(this);
+		
 		outputStream = socket.getOutputStream();
 		inputStream = socket.getInputStream();
+		
+		message("Welcome, bitch");
+		
+		readMessages = new ArrayList<Message>();
+		System.out.println("Created Client Handler");
 	}
 
 	public void run(){
 		try{
-			while(unreadMessages.size()>0){
-				Message m = unreadMessages.get(0);
-				message(m.toString());
-				unreadMessages.remove(0);
+			while(true){
+				Message clientSent = new Message(readNextMessage()); //Does this need to be separately threaded?
+				readMessages.add(clientSent);
+				ServerIntegration.mailBox.addMessage(clientSent);
 			}
-			
-			Message clientSent = new Message(readNextMessage()); //Does this need to be separately threaded?
-			ServerIntegration.mailBox.addMessage(clientSent);
-			//TODO add message to mailbox
-			
-			
-		} catch(IOException e){
 
+		} catch(IOException e){
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		} 
 	}
 
@@ -57,21 +63,33 @@ public class ClientHandler extends Thread implements Observer{
 				readByte = -1;
 			}
 		} while (readByte != -1);
-
+		
 		return sb.toString();
 	}
 
-	public void getMessages(){
-		ArrayList<Message> messageList = ServerIntegration.mailBox.getMessages();
-		for(Message message:messageList){
-			if(!readMessages.contains(message) && !unreadMessages.contains(message)){
-				unreadMessages.add(message);
+//	public void fetchMessages(){
+//		ArrayList<Message> messageList = ServerIntegration.mailBox.getMessages();
+//		try {
+//			for(Message message:messageList){
+//				if(!readMessages.contains(message)){
+//					readMessages.add(message);
+//					message(message.toString());
+//				}
+//			}
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
+
+	public void listenToMe(Message msg) {
+		if(!readMessages.contains(msg)){
+			try {
+				message(msg.toString());
+				readMessages.add(msg);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
-	}
-
-	@Override
-	public void update(Observable o, Object arg) {
-		getMessages();
+		
 	}
 }
