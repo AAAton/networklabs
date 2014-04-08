@@ -1,4 +1,4 @@
-package lab3.serverIntegration;
+package lab3.chatclient;
 
 import java.io.IOException;
 import java.io.OutputStream;
