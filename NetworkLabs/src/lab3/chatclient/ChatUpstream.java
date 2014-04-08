@@ -19,10 +19,9 @@ public class ChatUpstream extends Thread {
 		try {
 			while (scan.hasNextLine()) {
 				String input = scan.nextLine();
-				if (input.equals("close")) break;
 				os.write(input.getBytes());
+				os.write("\n".getBytes());
 			}
-			socket.close();
 			
 		} catch (IOException e) {
 			e.printStackTrace();
