@@ -48,7 +48,7 @@ public class ClientHandler extends Thread{
 	public void message(String msg) throws IOException {
 		outputStream.write((msg).getBytes());
 		char n = '\n';
-		outputStream.write((int) n);
+		//outputStream.write((int) n);
 	}
 
 	public String readNextMessage() throws IOException{
@@ -66,20 +66,6 @@ public class ClientHandler extends Thread{
 		
 		return sb.toString();
 	}
-
-//	public void fetchMessages(){
-//		ArrayList<Message> messageList = ServerIntegration.mailBox.getMessages();
-//		try {
-//			for(Message message:messageList){
-//				if(!readMessages.contains(message)){
-//					readMessages.add(message);
-//					message(message.toString());
-//				}
-//			}
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
 
 	public void sendToInbox(Message msg) {
 		if(!readMessages.contains(msg)){

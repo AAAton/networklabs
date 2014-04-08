@@ -14,7 +14,7 @@ public class ChatDownstream extends Thread {
 	public void run(){
 		while(true){
 			try {
-				String s = readNextMessage();
+				readNextMessage();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
