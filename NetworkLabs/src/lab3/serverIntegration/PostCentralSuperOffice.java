@@ -2,13 +2,13 @@ package lab3.serverIntegration;
 
 import java.util.ArrayList;
 
-public class MailBox {
+public class PostCentralSuperOffice {
 //	private ArrayList<Message> messageList;
 	private Message message;
 	private ArrayList<ClientHandler> clientHandlers;
 	
 	
-	public MailBox(){
+	public PostCentralSuperOffice(){
 //		messageList = new ArrayList<Message>();
 		clientHandlers = new ArrayList<ClientHandler>();
 	}
@@ -17,7 +17,7 @@ public class MailBox {
 		while(message!=null) wait();
 		message = msg;
 		for(ClientHandler c:clientHandlers){
-			c.listenToMe(msg);
+			c.sendToInbox(msg);
 		}
 		message = null;
 		notifyAll();

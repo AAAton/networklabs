@@ -1,9 +1,9 @@
 package lab3.serverIntegration;
 
 public class ServerIntegration {
-	public static MailBox mailBox;
+	public static PostCentralSuperOffice mailBox;
 	public static void main(String[] args) {
-		mailBox = new MailBox();
+		mailBox = new PostCentralSuperOffice();
 		new ChatServer();
 	}
 

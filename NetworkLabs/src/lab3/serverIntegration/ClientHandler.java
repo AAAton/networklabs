@@ -24,7 +24,7 @@ public class ClientHandler extends Thread{
 		outputStream = socket.getOutputStream();
 		inputStream = socket.getInputStream();
 		
-		message("Welcome, bitch");
+		message("Welcome, dear commander of hands");
 		
 		readMessages = new ArrayList<Message>();
 		System.out.println("Created Client Handler");
@@ -81,7 +81,7 @@ public class ClientHandler extends Thread{
 //		}
 //	}
 
-	public void listenToMe(Message msg) {
+	public void sendToInbox(Message msg) {
 		if(!readMessages.contains(msg)){
 			try {
 				message(msg.toString());
