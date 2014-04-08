@@ -15,8 +15,10 @@ public class ChatClient {
 			port = Integer.parseInt(args[1]);
 			Socket socket = new Socket(machine, port);
 			ChatUpstream cU = new ChatUpstream(socket);
+			ChatDownstream cD = new ChatDownstream(socket);
 			cU.start();
-
+			cD.start();
+		
 		} catch (IndexOutOfBoundsException e) {
 			System.out
 					.println("You have to write both machine and port number");
