@@ -1,73 +1,84 @@
 package lab4.monothread;
 
-import java.io.BufferedReader;
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.SynchronousQueue;
+
+import javax.swing.text.html.HTMLEditorKit;
 
 public class LinkCollecter {
 	private URL baseUrl;
-	private HashMap<URL,URL> parentChild;
-	private SynchronousQueue<URL> queue;
+	private static ArrayList<URL> urls,queue,emails;
 	
 	public LinkCollecter(URL url){
 		this.baseUrl = url;
+		queue = new ArrayList<URL>();
+		urls = new ArrayList<URL>();
+		emails = new ArrayList<URL>();
+		
 	}
 
-	public HashMap<URL, URL> getLinksBreadthFirst(int maximum) {
-		parentChild = new HashMap<URL,URL>();
+	public void getLinksBreadthFirst(int maximum) {		
+		queue.add(baseUrl);
 		
-		addLinksToQueue(baseUrl);
-		
-		for(int i=queue.size();i<maximum;i++){
-			URL url = queue.poll();
+		while(urls.size()<maximum){
+			URL url = getFromHeadOfQueue();
 			if(url==null) break;
-			addLinksToQueue(url);
-		}
-		
-		return parentChild;
-	}
-
-	private void addLinksToQueue(URL parent) {
-		//TODO: Use the java built in html-parser
-		
-//		try {
-//
-//			BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
-//
-//			String line;
-//			
-//			while((line = br.readLine()) != null){ //Reading line by line
-//				findLinksAndAddToQueue(line);
-//			}
-//			
-//			br.close();
-//			
-//		} catch (MalformedURLException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		
-	}
-
-	private void findLinksAndAddToQueue(String line) {
-		String beginningOfLink = "href=\"";
-		int lastLink = 0;
-		
-		//Presuming that the links start with href=" and ends with ", but no case for single apostrophe
-		while(line.indexOf(beginningOfLink,lastLink)>-1){
-			int startIndex = line.indexOf(beginningOfLink,lastLink)+6;
-			int endIndex = line.indexOf("\"",startIndex);
-
-			String link = line.substring(startIndex,endIndex);
 			
+			//TODO: Check mime-type!
+			findLinks(url);
 		}
-		
+	}
+	
+	public ArrayList<URL> getEmailAddresses(){
+		return emails;
+	}
+	public ArrayList<URL> getLinks(){
+		return urls;
 	}
 
+	private URL getFromHeadOfQueue() {
+		if(queue.isEmpty()) return null;
+		URL url = queue.get(0);
+		queue.remove(0);
+		return url;
+	}
+
+	private void findLinks(URL parent) {
+		
+		System.out.println("Fetching links from "+parent);
+        ParserGetter kit = new ParserGetter();
+        HTMLEditorKit.Parser parser = kit.getParser();
+        HTMLEditorKit.ParserCallback callback = new LinkGetterModified(parent);
+        
+        try {
+            InputStream in = new BufferedInputStream(parent.openStream());
+            InputStreamReader r = new InputStreamReader(in);
+            parser.parse(r, callback, true);
+        } catch(java.io.FileNotFoundException e){
+        	System.out.println("\t404 on "+parent+", removing from list...");
+        	urls.remove(parent);
+        }catch (IOException ex) {
+            ex.printStackTrace();
+            System.err.println(ex);
+        }
+	}
+	
+	public static void addLinkToQueue(URL url,URL parent){	
+		if(!queue.contains(url) && !urls.contains(url)){ //Have we been here before?
+			queue.add(url);
+			urls.add(url);
+			System.out.println("\t"+url+" was added");
+		}
+	}
+
+	public static void addMailAddress(String href) throws MalformedURLException {
+		if(!emails.contains(href))
+			emails.add(new URL(href));
+		System.out.println("\t"+href+" was added to emails");
+	}
 }

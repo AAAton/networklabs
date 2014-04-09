@@ -1,10 +1,8 @@
 package lab4.monothread;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import lab4.exampleFiles.LinkGetter;
 
 public class MonoThread {
 	public static final String BASE_URL = "http://cs.lth.se/pierre_nugues/";
@@ -15,12 +13,16 @@ public class MonoThread {
 			URL baseUrl = new URL(BASE_URL);
 			LinkCollecter linkCollecter = new LinkCollecter(baseUrl);
 
-			//HashMap<URL, URL> parentChild = linkCollecter.getLinksBreadthFirst(1000);
-
+			linkCollecter.getLinksBreadthFirst(1000);
+			ArrayList<URL> links,emails;
+			links = linkCollecter.getLinks();
+			emails = linkCollecter.getEmailAddresses();
 			
+			System.out.println(links.size());
+			System.out.println(emails.size());
 			
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			System.out.println("Your base-url is dumb");
 		}
 	}
 
