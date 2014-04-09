@@ -1,4 +1,4 @@
-package lab4.monothread;
+package lab4.multithread;
 
 import java.util.ArrayList;
 import java.io.File;
@@ -8,16 +8,17 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class MonoThread {
+public class MultiThread {
 	public static final String BASE_URL = "http://cs.lth.se/pierre_nugues/";
-
+	//TODO: This stops at the end of the first link...
 	public static void main(String[] args) {
 
 		try {
 			URL baseUrl = new URL(BASE_URL);
 			LinkCollecter linkCollecter = new LinkCollecter(baseUrl);
 
-			linkCollecter.getLinksBreadthFirst(100);
+			linkCollecter.getLinksBreadthFirst(1000);
+			
 			ArrayList<URL> links,emails;
 			links = linkCollecter.getLinks();
 			emails = linkCollecter.getEmailAddresses();
