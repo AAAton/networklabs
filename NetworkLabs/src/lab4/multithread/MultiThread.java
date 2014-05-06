@@ -9,7 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class MultiThread {
-	public static final String BASE_URL = "http://cs.lth.se/pierre_nugues/";
+	public static final String BASE_URL = "http://www.monokulturen.se/";
 	//TODO: This stops at the end of the first link...
 	public static void main(String[] args) {
 

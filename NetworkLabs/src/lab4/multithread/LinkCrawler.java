@@ -42,10 +42,11 @@ public class LinkCrawler extends Thread {
 			ex.printStackTrace();
 			System.err.println(ex);
 		}
+		LinkCollecter.callBack(this);
 	}
 	
 	private boolean isValidMIMEType(String contentType) {
-		return contentType.contains("text/html");
+		return (contentType!=null && contentType.contains("text/html"));
 	}
 	
 }

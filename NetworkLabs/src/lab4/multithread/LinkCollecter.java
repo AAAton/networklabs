@@ -16,26 +16,22 @@ import javax.swing.text.html.HTMLEditorKit;
 public class LinkCollecter {
 	private URL baseUrl;
 	private static ArrayList<URL> urls,queue,emails;
+	private static ArrayList<LinkCrawler> threads;
+	public static final int MAX_LINKS = 500;
 
 	public LinkCollecter(URL url){
 		this.baseUrl = url;
 		queue = new ArrayList<URL>();
 		urls = new ArrayList<URL>();
 		emails = new ArrayList<URL>();
-
+		urls.add(baseUrl);
 	}
 
-	public void getLinksBreadthFirst(int maximum) {		
-		queue.add(baseUrl);
-		ExecutorService pool = Executors.newFixedThreadPool(10);
-		
-		while(urls.size()<maximum){
-			URL url = getFromHeadOfQueue();
-			if(url==null) break;
-			Thread crawler = new LinkCrawler(url);
-			pool.submit(crawler);
-		}
-		pool.shutdown();
+	public void getLinksBreadthFirst(int maximum) {
+		threads = new ArrayList<LinkCrawler>();
+		LinkCrawler threadas = new LinkCrawler(baseUrl);
+		threads.add(threadas);
+		threadas.start();
 	}
 
 	public ArrayList<URL> getEmailAddresses(){
@@ -45,11 +41,26 @@ public class LinkCollecter {
 		return urls;
 	}
 
-	private URL getFromHeadOfQueue() {
+	private static URL getFromHeadOfQueue() {
 		if(queue.isEmpty()) return null;
 		URL url = queue.get(0);
 		queue.remove(0);
 		return url;
+	}
+	
+	public static synchronized void callBack(LinkCrawler finishedThread){
+		threads.remove(finishedThread);
+		while(threads.size()< 10 && urls.size()<MAX_LINKS){
+			URL u = getFromHeadOfQueue();
+			if(u==null) break;
+			LinkCrawler uThread = new LinkCrawler(u);
+			uThread.start();
+			threads.add(uThread);
+		}
+		
+		if(threads.size()==0){
+			System.out.println("FINISHED! Number of fetched urls_is "+urls.size()+", and we also found "+emails.size()+" emails.");
+		}
 	}
 	
 	public static synchronized void remove(URL url){
@@ -58,6 +69,7 @@ public class LinkCollecter {
 
 
 	public static synchronized void addLinkToQueue(URL url,URL parent){	
+		if(urls.size()>=MAX_LINKS) return;
 		if(!queue.contains(url) && !urls.contains(url)){ //Have we been here before?
 			queue.add(url);
 			urls.add(url);
@@ -66,6 +78,7 @@ public class LinkCollecter {
 	}
 
 	public static synchronized void addMailAddress(String href) throws MalformedURLException {
+		if(urls.size()>MAX_LINKS) return;
 		URL url = new URL(href);
 		if(!emails.contains(url))
 			emails.add(url);
