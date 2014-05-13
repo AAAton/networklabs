@@ -8,7 +8,7 @@ import java.util.Locale;
 
 public class MainClient {
 
-	public MainClient() {
+	public MainClient(String command) {
 		Locale locale;
 		locale = Locale.getDefault();
 
@@ -17,7 +17,7 @@ public class MainClient {
 			InetAddress IPAddress = InetAddress.getByName("localhost");
 			byte[] sendData = new byte[5];
 			byte[] receiveData = new byte[64];
-			sendData = locale.toString().getBytes();
+			sendData = (command +" "+ locale.toString()).getBytes();
 			DatagramPacket sendPacket = new DatagramPacket(sendData,
 					sendData.length, IPAddress, 3000);
 
@@ -40,7 +40,8 @@ public class MainClient {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new MainClient();
+		new MainClient("date");
+		new MainClient("time");
 
 	}
 
