@@ -15,22 +15,24 @@ public class DateTimeServer2 {
 		socket = new DatagramSocket(3000);
 		while (true) {
 			Client client = recieve();
-			getTimeDate("date",client.getLocale()); //ÄNDRA COMMANDET SENARE!
+			getTimeDate(client.getCommand(),client.getLocale()); 
 			send(client, date);
 		}
 	}
 
 	public Client recieve() throws Throwable{
-		byte[] rData = new byte[5];
+		byte[] rData = new byte[10];
 		DatagramPacket receivePacket = new DatagramPacket(rData, rData.length);
 		socket.receive(receivePacket);
-		String sentence = new String( receivePacket.getData());
-		Locale locale = new Locale(sentence);
+		String sentence = new String( receivePacket.getData()); //"date SV_se" eller "time SV_se"
+		String[] words = sentence.split("\\s+");
+		String command = words[0];
+		Locale locale = new Locale(words[1]);
 		System.out.println(locale);
 		System.out.println("RECEIVED: " + sentence);       
 		InetAddress IPAddress = receivePacket.getAddress();            
 		int port = receivePacket.getPort(); 
-		return new Client(IPAddress,port,locale);
+		return new Client(IPAddress,port,locale,command);
 	}
 
 	

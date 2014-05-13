@@ -8,12 +8,13 @@ public class Client {
 	private InetAddress ip;
 	private int port;
 	private Locale locale;
+	private String command;
 
-	public Client(InetAddress iPAddress, int port, Locale locale) {
+	public Client(InetAddress iPAddress, int port, Locale locale,String command) {
 		this.ip = iPAddress;
 		this.port = port;
 		this.locale = locale;
-		
+		this.command = command;
 	}
 
 	public InetAddress getIp() {
@@ -30,5 +31,7 @@ public class Client {
 		// TODO Auto-generated method stub
 		return locale;
 	}
-
+	public String getCommand(){
+		return command;
+	}
 }
