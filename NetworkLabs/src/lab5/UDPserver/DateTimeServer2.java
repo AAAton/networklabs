@@ -27,7 +27,7 @@ public class DateTimeServer2 {
 		int length = receivePacket.getLength();
 		System.out.println("Length of message: "+receivePacket.getLength());
 		String sentence = new String( receivePacket.getData()); //"date SV_se" eller "time SV_se"
-		sentence = sentence.substring(0, length-1);
+		sentence = sentence.substring(0, length);
 		String[] words = sentence.split("\\s+");
 		String command = words[0];
 		Locale locale = new Locale(words[1]);
