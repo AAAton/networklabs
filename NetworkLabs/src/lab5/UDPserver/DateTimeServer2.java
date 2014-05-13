@@ -21,10 +21,13 @@ public class DateTimeServer2 {
 	}
 
 	public Client recieve() throws Throwable{
-		byte[] rData = new byte[10];
+		byte[] rData = new byte[64];
 		DatagramPacket receivePacket = new DatagramPacket(rData, rData.length);
 		socket.receive(receivePacket);
+		int length = receivePacket.getLength();
+		System.out.println("Length of message: "+receivePacket.getLength());
 		String sentence = new String( receivePacket.getData()); //"date SV_se" eller "time SV_se"
+		sentence = sentence.substring(0, length-1);
 		String[] words = sentence.split("\\s+");
 		String command = words[0];
 		Locale locale = new Locale(words[1]);
