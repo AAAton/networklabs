@@ -14,11 +14,12 @@ public class SnedUDP2 {
 		locale = Locale.getDefault();
 
 		try {
-			clientSocket = new DatagramSocket(port);
+			clientSocket = new DatagramSocket(port+2);
 			String hostAddress = discover();
 			System.out.println("Found host at "+hostAddress);
 			InetAddress IPAddress = InetAddress.getByName(hostAddress);
-			byte[] sendData = new byte[5];
+			System.out.println("Sending request for a sexi date to "+IPAddress);
+			byte[] sendData = new byte[32];
 			byte[] receiveData = new byte[64];
 			sendData = (command +" "+ locale.toString()).getBytes();
 			DatagramPacket sendPacket = new DatagramPacket(sendData,
@@ -45,7 +46,7 @@ public class SnedUDP2 {
 		MulticastSocket ms = new MulticastSocket();
 		ms.setTimeToLive(1);
 		InetAddress ia = InetAddress.getByName("experiment.mcast.net");
-		while(true) {
+
 			String s = "searching for timeservers. forever alone";
 			System.out.println("Sending message: "+s);
 			byte[] buf = s.getBytes();
@@ -53,10 +54,8 @@ public class SnedUDP2 {
 			ms.send(dp);
 			
 			String hostName = receiveServerOffers(ms);
-			if(hostName!=null){
-				return hostName;
-			}
-		}
+			
+			return hostName;
 	}
 	
 	private String receiveServerOffers(MulticastSocket ms) throws IOException {
@@ -64,9 +63,10 @@ public class SnedUDP2 {
 		DatagramPacket dp = new DatagramPacket(receiveData, receiveData.length);
 		System.out.println("Trying to receive messages");
 		ms.receive(dp);
-		String sentence = dp.getData().toString();
-		System.out.println("received "+sentence);
+		String sentence = new String(dp.getData());
+		System.out.println("received: \""+sentence+"\"");
 		if(sentence.startsWith("Yo! Sexxi girls in ur neighbourhood ;););) chat now!")){
+			System.out.println("Received message and it matches command");
 			String[] words = sentence.split("\\s+");
 			String hostname = words[words.length-1];
 			return hostname;

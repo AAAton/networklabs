@@ -34,8 +34,8 @@ public class DateTimeServer2 {
 		String[] words = sentence.split("\\s+");
 		String command = words[0];
 		Locale locale = new Locale(words[1]);
-		System.out.println(locale);
-		System.out.println("RECEIVED: " + sentence);       
+		System.out.println("Locale: "+locale);
+		System.out.println("Command: " + command);       
 		InetAddress IPAddress = receivePacket.getAddress();            
 		int port = receivePacket.getPort(); 
 		return new Client(IPAddress,port,locale,command);
@@ -47,8 +47,6 @@ public class DateTimeServer2 {
 	private void send(Client client, String response) throws Throwable {
 		byte[] sData = new byte[1024];
 		sData = response.getBytes();
-		System.out.println("sData: "+sData);
-		System.out.println("Client"+client);
 		DatagramPacket sendPacket = new DatagramPacket(sData, sData.length, client.getIp(), client.getPort());
 		socket.send(sendPacket);
 
