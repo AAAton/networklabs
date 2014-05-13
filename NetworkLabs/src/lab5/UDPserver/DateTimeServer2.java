@@ -15,8 +15,8 @@ public class DateTimeServer2 {
 		socket = new DatagramSocket(3000);
 		while (true) {
 			Client client = recieve();
-			getTimeDate(client.getCommand(),client.getLocale()); 
-			send(client, date);
+			String response = getTimeDate(client.getCommand(),client.getLocale()); 
+			send(client, response);
 		}
 	}
 
@@ -38,9 +38,9 @@ public class DateTimeServer2 {
 	
 	
 
-	private void send(Client client, Date date) throws Throwable {
+	private void send(Client client, String response) throws Throwable {
 		byte[] sData = new byte[1024];
-		sData = date.toString().getBytes();
+		sData = response.getBytes();
 		System.out.println("sData: "+sData);
 		System.out.println("Client"+client);
 		DatagramPacket sendPacket = new DatagramPacket(sData, sData.length, client.getIp(), client.getPort());
