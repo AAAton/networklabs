@@ -65,7 +65,7 @@ public class SnedUDP2 {
 		ms.receive(dp);
 		String sentence = new String(dp.getData());
 		System.out.println("received: \""+sentence+"\"");
-		if(sentence.startsWith("Yo! Sexxi girls in ur neighbourhood ;););) chat now!")){
+		if(sentence.startsWith("Yo! Sexxi girls in ur area ;););) chat now!")){
 			System.out.println("Received message and it matches command");
 			String[] words = sentence.split("\\s+");
 			String hostname = words[words.length-1];
