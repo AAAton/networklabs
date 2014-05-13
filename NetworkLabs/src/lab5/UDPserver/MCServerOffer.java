@@ -3,7 +3,7 @@ package lab5.UDPserver;
 import java.net.*;
 import java.io.*;
 
-public class MCServerOffer implements Runnable {
+public class MCServerOffer extends Thread {
 	static DatagramSocket datagramSocket;
 	private int portNumber;
 	private int msPort;
@@ -19,7 +19,9 @@ public class MCServerOffer implements Runnable {
 		int returnPort = dp.getPort();
 		byte[] sendByte = new byte[1024];
 		sendByte = ("Yo! Sexxi girls in ur neighbourhood ;););) chat now! "+hostname).getBytes();
+		System.out.println("return address "+returnAddress+", return port "+returnPort);
 		DatagramPacket send = new DatagramPacket(sendByte,sendByte.length,returnAddress,returnPort);
+		System.out.println("Sending response");
 		datagramSocket.send(send);
 	}
 
@@ -37,7 +39,10 @@ public class MCServerOffer implements Runnable {
 				ms.receive(dp);
 				String s = new String(dp.getData(),0,dp.getLength());
 				System.out.println("Received: "+s);
-				offer(dp);
+				if(s.startsWith("searching for timeservers. forever alone")){
+					System.out.println("Matches time server request");
+					offer(dp);
+				}
 			}
 			
 		} catch(IOException e) {

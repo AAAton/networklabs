@@ -13,6 +13,9 @@ public class DateTimeServer2 {
 
 	public DateTimeServer2(int portnumber) throws Throwable {
 		socket = new DatagramSocket(portnumber);
+		MCServerOffer t = new MCServerOffer(4099,portnumber+1);
+		t.start();
+		
 		while (true) {
 			Client client = recieve();
 			String response = getTimeDate(client.getCommand(),client.getLocale()); 
